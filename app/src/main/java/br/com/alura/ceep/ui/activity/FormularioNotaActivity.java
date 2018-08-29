@@ -1,6 +1,7 @@
 package br.com.alura.ceep.ui.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +14,11 @@ import br.com.alura.ceep.R;
 import br.com.alura.ceep.dao.NotaDAO;
 import br.com.alura.ceep.model.Nota;
 
+import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CHAVE_NOTA;
+import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CODIGO_RESULTADO_NOTA_CRIADA;
+
 public class FormularioNotaActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,23 +35,28 @@ public class FormularioNotaActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int itemId = item.getItemId();
-
-        if(itemId == R.id.menu_formulario_nota_salva){
-
-            EditText titulo = findViewById(R.id.formulario_nota_titulo);
-            EditText descricao = findViewById(R.id.formulario_nota_descricao);
-
-            Nota novaNota = new Nota(titulo.getText().toString(), descricao.getText().toString());
-
-            Intent resultadoInsercao = new Intent();
-            resultadoInsercao.putExtra("nota", novaNota);
-            setResult(2, resultadoInsercao);
-
+        if(eMenuSalvaNota(item)){
+            Nota novaNota = criaNota();
+            retornaNota(novaNota);
             finish();
         }
-
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void retornaNota(Nota nota) {
+        Intent resultadoInsercao = new Intent();
+        resultadoInsercao.putExtra(CHAVE_NOTA, nota);
+        setResult(CODIGO_RESULTADO_NOTA_CRIADA, resultadoInsercao);
+    }
+
+    @NonNull
+    private Nota criaNota() {
+        EditText titulo = findViewById(R.id.formulario_nota_titulo);
+        EditText descricao = findViewById(R.id.formulario_nota_descricao);
+        return new Nota(titulo.getText().toString(), descricao.getText().toString());
+    }
+
+    private boolean eMenuSalvaNota(MenuItem item) {
+        return item.getItemId() == R.id.menu_formulario_nota_salva;
     }
 }

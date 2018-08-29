@@ -19,7 +19,6 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
     private final List<Nota> notas;
     private final Context context;
 
-
     public ListaNotasAdapter(Context context, List<Nota> notas){
         this.context = context;
         this.notas = notas;
