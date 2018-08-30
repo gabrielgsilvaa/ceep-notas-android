@@ -132,6 +132,7 @@ public class ListaNotasActivity extends AppCompatActivity {
         configuraAdapter(todasNotas, listaNotas);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchHelperCallback());
+        itemTouchHelper.attachToRecyclerView(listaNotas);
     }
 
     private void configuraAdapter(List<Nota> todasNotas, RecyclerView listaNotas) {
