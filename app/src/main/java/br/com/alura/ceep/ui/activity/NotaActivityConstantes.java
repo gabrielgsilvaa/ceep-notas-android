@@ -5,7 +5,7 @@ public interface NotaActivityConstantes {
     public String CHAVE_NOTA = "nota";
     public String CHAVE_POSICAO = "posicao";
 
-    public int VALOR_PADRAO_POSICAO_VAZIA = -1;
+    public int VALOR_PADRAO_POSICAO_INVALIDA = -1;
 
 
     public int CODIGO_REQUISICAO_INSERE_NOTA = 1;
