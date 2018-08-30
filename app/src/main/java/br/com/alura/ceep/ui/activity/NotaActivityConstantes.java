@@ -7,10 +7,6 @@ public interface NotaActivityConstantes {
 
     public int VALOR_PADRAO_POSICAO_INVALIDA = -1;
 
-
     public int CODIGO_REQUISICAO_INSERE_NOTA = 1;
     public int CODIGO_REQUISICAO_ALTERA_NOTA = 2;
-
-    public int CODIGO_RESULTADO_NOTA_CRIADA = 2;
-
 }

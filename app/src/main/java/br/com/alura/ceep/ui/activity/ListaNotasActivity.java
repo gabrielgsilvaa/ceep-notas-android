@@ -1,5 +1,6 @@
 package br.com.alura.ceep.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +21,6 @@ import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CHAVE_NOTA;
 import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CHAVE_POSICAO;
 import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CODIGO_REQUISICAO_ALTERA_NOTA;
 import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CODIGO_REQUISICAO_INSERE_NOTA;
-import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.CODIGO_RESULTADO_NOTA_CRIADA;
 import static br.com.alura.ceep.ui.activity.NotaActivityConstantes.VALOR_PADRAO_POSICAO_INVALIDA;
 
 public class ListaNotasActivity extends AppCompatActivity {
@@ -67,20 +67,23 @@ public class ListaNotasActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(eResultadoInsereNota(requestCode, resultCode, data)){
-            Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);
-            adicionaNota(notaRecebida);
+        if(eResultadoInsereNota(requestCode, data)){
+            if(resultadoOK(resultCode)) {
+                Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);
+                adicionaNota(notaRecebida);
+            }
         }
 
-        if(eResultadoAlteraNota(requestCode, resultCode, data)){
+        if(eResultadoAlteraNota(requestCode, data)){
+            if(resultadoOK(resultCode)) {
+                Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);
+                int notaPosicao = data.getIntExtra(CHAVE_POSICAO, VALOR_PADRAO_POSICAO_INVALIDA);
 
-            Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);
-            int  notaPosicao = data.getIntExtra(CHAVE_POSICAO, VALOR_PADRAO_POSICAO_INVALIDA);
-
-            if(notaPosicao > VALOR_PADRAO_POSICAO_INVALIDA) {
-                alteraNota(notaRecebida, notaPosicao);
-            }else{
-                Toast.makeText(this, "Ocorreu um problema na alteração da nota", Toast.LENGTH_LONG).show();
+                if (notaPosicao > VALOR_PADRAO_POSICAO_INVALIDA) {
+                    alteraNota(notaRecebida, notaPosicao);
+                } else {
+                    Toast.makeText(this, "Ocorreu um problema na alteração da nota", Toast.LENGTH_LONG).show();
+                }
             }
         }
 
@@ -92,9 +95,8 @@ public class ListaNotasActivity extends AppCompatActivity {
         adapter.altera(notaPosicao, notaRecebida);
     }
 
-    private boolean eResultadoAlteraNota(int requestCode, int resultCode, Intent data) {
+    private boolean eResultadoAlteraNota(int requestCode, Intent data) {
         return eCodigoRequisicaoAlteraNota(requestCode)
-                && eCodigoResultadoNotaCriada(resultCode)
                 && temNota(data);
     }
 
@@ -107,16 +109,16 @@ public class ListaNotasActivity extends AppCompatActivity {
         adapter.adiciona(nota);
     }
 
-    private boolean eResultadoInsereNota(int requestCode, int resultCode, Intent data) {
-        return eCodigoRequisicaoInsereNota(requestCode) && eCodigoResultadoNotaCriada(resultCode) && temNota(data);
+    private boolean eResultadoInsereNota(int requestCode,Intent data) {
+        return eCodigoRequisicaoInsereNota(requestCode) && temNota(data);
     }
 
     private boolean temNota(Intent data) {
         return data.hasExtra(CHAVE_NOTA);
     }
 
-    private boolean eCodigoResultadoNotaCriada(int resultCode) {
-        return resultCode == CODIGO_RESULTADO_NOTA_CRIADA;
+    private boolean resultadoOK(int resultCode) {
+        return resultCode == Activity.RESULT_OK;
     }
 
     private boolean eCodigoRequisicaoInsereNota(int requestCode) {
@@ -138,7 +140,6 @@ public class ListaNotasActivity extends AppCompatActivity {
                 vaiParaFormularioActivityAltera(nota, posicao);
             }
         });
-
     }
 
     private void vaiParaFormularioActivityAltera(Nota nota, int posicao) {
